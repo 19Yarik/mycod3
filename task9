@@ -1,0 +1,48 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def partition(head: ListNode, x: int) -> ListNode:
+    # Два нових списки для розділення
+    less_head = ListNode(0)  # Голова для вузлів менше x
+    greater_head = ListNode(0)  # Голова для вузлів більших або рівних x
+    less = less_head
+    greater = greater_head
+
+    # Проходимо через весь список
+    while head:
+        if head.val < x:
+            less.next = head  # Додаємо до списку менших
+            less = less.next
+        else:
+            greater.next = head  # Додаємо до списку більших або рівних
+            greater = greater.next
+        head = head.next
+
+    # Підключаємо кінець списку менших до початку списку більших
+    greater.next = None  # Завершуємо список більших, щоб не було циклу
+    less.next = greater_head.next  # З'єднуємо два списки
+
+    return less_head.next  # Повертаємо голова списку менших
+
+# Допоміжна функція для виведення списку
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Тестування
+head1 = ListNode(1, ListNode(4, ListNode(3, ListNode(2, ListNode(5, ListNode(2))))))
+x1 = 3
+head2 = ListNode(2, ListNode(1))
+x2 = 2
+
+# Розділення списків
+result1 = partition(head1, x1)
+result2 = partition(head2, x2)
+
+# Виводимо результати
+print_list(result1)  # Output: 1 -> 2 -> 2 -> 4 -> 3 -> 5 -> None
+print_list(result2)  # Output: 1 -> 2 -> None
