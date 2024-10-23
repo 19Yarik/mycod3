@@ -1,0 +1,48 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def hasCycle(head: ListNode) -> bool:
+    if not head:
+        return False
+    
+    slow = head
+    fast = head
+    
+    while fast and fast.next:
+        slow = slow.next            # Перемістити повільний вказівник на один вузол
+        fast = fast.next.next      # Перемістити швидкий вказівник на два вузли
+        
+        # Якщо повільний та швидкий вказівники зустрілися, є цикл
+        if slow == fast:
+            return True
+            
+    return False  # Якщо швидкий вказівник досягає кінця, немає циклу
+
+# Приклади використання
+def create_cycle_list(values, pos):
+    head = ListNode(0) if values else None
+    current = head
+    cycle_node = None
+    
+    for i in range(len(values)):
+        current.next = ListNode(values[i])
+        current = current.next
+        if i == pos:
+            cycle_node = current
+    
+    if cycle_node:
+        current.next = cycle_node  # Створюємо цикл, якщо pos не -1
+        
+    return head.next if head else None
+
+# Тестування прикладів
+head1 = create_cycle_list([3, 2, 0, -4], 1)  # Цикл на 1-му вузлі
+head2 = create_cycle_list([1, 2], 0)           # Цикл на 0-му вузлі
+head3 = create_cycle_list([1], -1)              # Без циклу
+
+# Перевірка циклів
+print(hasCycle(head1))  # Output: True
+print(hasCycle(head2))  # Output: True
+print(hasCycle(head3))  # Output: False
