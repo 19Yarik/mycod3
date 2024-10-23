@@ -1,0 +1,68 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reverseKGroup(head: ListNode, k: int) -> ListNode:
+    # Допоміжна функція для перевертання частини списку
+    def reverseLinkedList(head, k):
+        prev = None
+        current = head
+        while k > 0:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+            k -= 1
+        return prev  # Новий голова перевернутого списку
+
+    # Перший вхідний вузол
+    dummy = ListNode(0)
+    dummy.next = head
+    group_prev = dummy
+    
+    while True:
+        kth = group_prev
+        # Знаходимо k-ий вузол
+        for i in range(k):
+            kth = kth.next
+            if not kth:
+                return dummy.next  # Кількість вузлів менше k, повертаємо результуючий список
+
+        # Зберігаємо початок групи та наступний вузол після групи
+        group_next = kth.next
+        kth.next = None  # Розділяємо групу
+
+        # Розвертаємо групу
+        new_head = reverseLinkedList(head, k)
+
+        # З'єднуємо перевернуту групу з попередньою частиною
+        group_prev.next = new_head
+        head.next = group_next  # З'єднуємо з наступною частиною
+
+        # Переходимо до наступної групи
+        group_prev = head
+        head = group_next
+    
+    return dummy.next
+
+# Допоміжна функція для виведення списку
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Тестування
+head1 = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+k1 = 2
+head2 = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+k2 = 3
+
+# Розвертання вузлів у k-групах
+result1 = reverseKGroup(head1, k1)
+result2 = reverseKGroup(head2, k2)
+
+# Виводимо результати
+print_list(result1)  # Output: 2 -> 1 -> 4 -> 3 -> 5 -> None
+print_list(result2)  # Output: 3 -> 2 -> 1 -> 4 -> 5 -> None
