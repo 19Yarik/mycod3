@@ -1,0 +1,54 @@
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+    # Додаємо порівняння, щоб використовувати ListNode в купі
+    def __lt__(self, other):
+        return self.val < other.val
+
+def mergeKLists(lists):
+    min_heap = []
+    
+    # Додаємо перші вузли всіх списків у купу
+    for i in range(len(lists)):
+        if lists[i]:
+            heapq.heappush(min_heap, lists[i])
+    
+    # Створюємо фіктивний вузол для легшого управління результатом
+    dummy = ListNode(0)
+    current = dummy
+    
+    # Обробляємо елементи з купи
+    while min_heap:
+        # Витягуємо найменший елемент
+        node = heapq.heappop(min_heap)
+        current.next = node
+        current = current.next
+        
+        # Додаємо наступний вузол з того ж списку, якщо він існує
+        if node.next:
+            heapq.heappush(min_heap, node.next)
+    
+    return dummy.next
+
+# Допоміжна функція для виведення списку
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Тестування
+list1 = ListNode(1, ListNode(4, ListNode(5)))
+list2 = ListNode(1, ListNode(3, ListNode(4)))
+list3 = ListNode(2, ListNode(6))
+lists = [list1, list2, list3]
+
+# Об'єднання списків
+merged_list = mergeKLists(lists)
+
+# Виводимо результати
+print_list(merged_list)  # Output: 1 -> 1 -> 2 -> 3 -> 4 -> 4 -> 5 -> 6 -> None
