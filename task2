@@ -1,0 +1,41 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def deleteDuplicates(head: ListNode) -> ListNode:
+    # Якщо список порожній або містить лише один елемент
+    if not head or not head.next:
+        return head
+    
+    current = head
+    
+    while current and current.next:
+        # Якщо значення поточного вузла збігається з наступним
+        if current.val == current.next.val:
+            # Пропускаємо наступний вузол
+            current.next = current.next.next
+        else:
+            # Переходимо до наступного вузла
+            current = current.next
+            
+    return head
+
+# Приклади використання
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Створення прикладів списків
+head1 = ListNode(1, ListNode(1, ListNode(2)))
+head2 = ListNode(1, ListNode(1, ListNode(2, ListNode(3, ListNode(3)))))
+
+# Видалення дублікатів
+result1 = deleteDuplicates(head1)
+result2 = deleteDuplicates(head2)
+
+# Виводимо результати
+print_list(result1)  # Output: 1 -> 2 -> None
+print_list(result2)  # Output: 1 -> 2 -> 3 -> None
