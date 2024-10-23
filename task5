@@ -1,0 +1,27 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def deleteNode(node: ListNode) -> None:
+    # Копіюємо значення наступного вузла в поточний вузол
+    node.val = node.next.val
+    # Перепризначаємо посилання, щоб пропустити наступний вузол
+    node.next = node.next.next
+
+# Допоміжна функція для виведення списку
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Тестування
+head = ListNode(4, ListNode(5, ListNode(1, ListNode(9))))
+node_to_delete = head.next  # Вузол зі значенням 5
+
+# Видалення вузла
+deleteNode(node_to_delete)
+
+# Виводимо результати
+print_list(head)  # Output: 4 -> 1 -> 9 -> None
