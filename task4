@@ -1,0 +1,63 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def reorderList(head: ListNode) -> None:
+    if not head or not head.next:
+        return
+    
+    # 1. Знайти середину списку
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    # 2. Розділити список на дві половини
+    first_half = head
+    second_half = slow.next
+    slow.next = None  # Обриваємо першу половину
+    
+    # 3. Перевернути другу половину списку
+    prev = None
+    current = second_half
+    while current:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    second_half = prev  # Тепер prev - це голова перевернутого списку
+
+    # 4. Об’єднати обидві половини
+    first, second = first_half, second_half
+    while second:
+        # Зберігаємо наступні вузли
+        temp1 = first.next
+        temp2 = second.next
+        
+        # Змінюємо посилання
+        first.next = second
+        second.next = temp1
+        
+        # Переходимо до наступних вузлів
+        first = temp1
+        second = temp2
+
+# Допоміжна функція для виведення списку
+def print_list(node):
+    while node:
+        print(node.val, end=" -> ")
+        node = node.next
+    print("None")
+
+# Тестування
+head1 = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+head2 = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+
+# Перевпорядкування списків
+reorderList(head1)
+reorderList(head2)
+
+# Виводимо результати
+print_list(head1)  # Output: 1 -> 4 -> 2 -> 3 -> None
+print_list(head2)  # Output: 1 -> 5 -> 2 -> 4 -> 3 -> None
